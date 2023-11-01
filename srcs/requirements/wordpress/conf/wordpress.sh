@@ -1,17 +1,33 @@
-#!/bin/sh
+#!/bin/bash
 
+chown -R www-data:www-data /var/www/html/*
+chmod -R 755 /var/www/html/*
+
+mkdir -p /run/php/
+touch /run/php/php7.3-fpm.pid
+
+# Wait for the database
 sleep 10
-if [ ! -e /var/www/wordpress/wp-config.php ];
-then
-    wp config create	--allow-root --dbname=$MDB_DATABASE --dbuser=$MDB_USER --dbpass=$MDB_PASSWORD \
-    					--dbhost=mariadb:3306 --path='/var/www/wordpress'
 
-sleep 10
-wp core install     --url=$DOMAIN_NAME --title=$WP_TITLE --admin_user=$WP_ADMIN --admin_password=$WP_ADM_PASSWORD --admin_email=$WP_ADMIN_EMAIL --allow-root --path='/var/www/wordpress'
-wp user create      --allow-root --role=author $WP_U1_LOGIN $WP_U1_EMAIL --user_pass=$WP_U1_PASS --path='/var/www/wordpress' >> /log.txt
-fi
+# script wp-cli
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+mv wp-cli.phar /usr/local/bin/wp
+cd /var/www/html/wordpress
+wp core install \
+    --allow-root \
+    --url=${URL} \
+    --title=${WP_TITLE} \
+    --admin_user=${WP_ADMIN} \
+    --admin_password=${WP_ADM_PASSWORD} \
+    --admin_email=${WP_ADMIN_EMAIL} \
+    --path=/var/www/html/wordpress
+wp user create ${WP_U1_LOGIN} ${WP_U1_EMAIL} \
+                --allow-root \
+                --user_pass=${WP_U1_PASS} \
+                --path=/var/www/html/wordpress
 
-if [ ! -d /run/php ]; then
-    mkdir ./run/php
-fi
-/usr/sbin/php-fpm7.3 -F
+
+echo "Wordpress install finish"
+# exec /usr/sbin/php-fpm7.3 --nodaemonize -F
+exec "$@"

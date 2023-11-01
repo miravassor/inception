@@ -1,15 +1,22 @@
 FROM debian:buster
 
 RUN apt-get update && \
-    apt-get install -y mariadb-server && \
+    apt-get upgrade -y && \
+    apt-get install -y mariadb-server mariadb-client gettext && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY conf/my.cnf /etc/mysql/mariadb.conf.d/my.cnf
+RUN rm -rdf /etc/mysql/my.cnf
+
+ENV LANG C.UTF-8
+
+COPY conf/my.cnf etc/mysql/my.cnf
 COPY conf/mariadb.sh /mariadb.sh
+COPY conf/database.sql /database.sql
 
-RUN  chmod +x /mariadb.sh
-
-ENTRYPOINT ["bash", "mariadb.sh"]
+RUN mkdir /var/run/mysqld/ && \
+    chmod a+x /mariadb.sh
 
 EXPOSE 3306
+
+CMD ["bash", "mariadb.sh"]
