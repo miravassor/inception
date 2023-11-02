@@ -7,6 +7,12 @@ all:
 down:
 	sudo docker compose -f ./srcs/docker-compose.yml down
 
+stop:
+	sudo docker compose -f ./srcs/docker-compose.yml stop
+
+up:
+	sudo docker compose -f ./srcs/docker-compose.yml up
+
 clean:
 	sudo docker compose -f ./srcs/docker-compose.yml down
 	docker system prune -af

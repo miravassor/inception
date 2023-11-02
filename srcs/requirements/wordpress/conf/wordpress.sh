@@ -6,10 +6,8 @@ chmod -R 755 /var/www/html/*
 mkdir -p /run/php/
 touch /run/php/php7.3-fpm.pid
 
-# Wait for the database
 sleep 10
 
-# script wp-cli
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 mv wp-cli.phar /usr/local/bin/wp
@@ -27,7 +25,4 @@ wp user create ${WP_U1_LOGIN} ${WP_U1_EMAIL} \
                 --user_pass=${WP_U1_PASS} \
                 --path=/var/www/html/wordpress
 
-
-echo "Wordpress install finish"
-# exec /usr/sbin/php-fpm7.3 --nodaemonize -F
 exec "$@"
