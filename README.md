@@ -2,8 +2,8 @@
 
 ## Overview
 
-The Inception project expands your system administration skills by virtualizing multiple Docker images within a virtual machine, focusing on Docker. 
-You'll create a small infrastructure of various services, each in its container, using either Alpine or Debian as a base.
+The Inception project is about system administration through the application of Docker virtualization. 
+This project construct a network infrastructure that hosts a range of services. Each service  operate within its own dedicated Docker container. My containers are based on Debian.
 
 ## Objectives
 
@@ -19,7 +19,7 @@ You'll create a small infrastructure of various services, each in its container,
 
 ## Services
 
-- **Nginx Container**: Runs Nginx
+- **Nginx Container**: Runs Nginx (TLSv1.2 TLSv1.3)
 - **WordPress Container**: Contains WordPress and php-fpm, without Nginx.
 - **MariaDB Container**: Contains MariaDB database, without Nginx.
 
@@ -31,8 +31,3 @@ You'll create a small infrastructure of various services, each in its container,
 ## Network
 
 - Docker network to connect containers.
-
-## Building and Running
-
-- **Build Images**: Use `make` to build Docker images from your Dockerfiles specified in `docker-compose.yml`.
-- **Run Containers**: Use `docker-compose up` to start your containers based on the configurations.
